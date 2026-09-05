@@ -1,0 +1,175 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Direct HTTP probes of every host this record knows: the registrable domain
+  (4screen.com, www.4screen.com), the API host (api.4screen.com), the customer
+  portal (portal.4screen.com) and the status host (status.4screen.com). The
+  Keycloak realm path was discovered from https://portal.4screen.com/config.js,
+  which publishes window.AUTH_URL = 'https://api.4screen.com/auth' and
+  window.AUTH_REALM = 'fourscreen'.
+name: 4.screen well-known discovery documents
+description: >-
+  4.screen serves an RFC 9116 security.txt from three separate hosts and a full
+  anonymous OpenID Connect / OAuth 2.0 Authorization Server Metadata document
+  from its Keycloak realm. Every other API path on api.4screen.com — including
+  the root well-known paths, /graphql and every springdoc/swagger location — is
+  answered with an HTTP 401 AUTHENTICATION_FAILED envelope, so the discovery
+  documents below are the only machine-readable contract 4.screen publishes
+  without credentials.
+
+hosts:
+  - host: 4screen.com
+    note: >-
+      WordPress marketing site. Unknown paths return HTTP 404 with a full HTML
+      page, so a 404 here is a genuine absence and not a catch-all 200.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: 4screen-security.txt
+        note: >-
+          RFC 9116. Contact mailto:infosec@4screen.com, Expires
+          2027-08-20, Preferred-Languages en/de, and a Canonical field
+          pointing back at this URL. No Policy or Encryption field.
+      - path: /.well-known/openid-configuration
+        status: 404
+        file: null
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        file: null
+      - path: /.well-known/api-catalog
+        status: 404
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /.well-known/agent.json
+        status: 404
+        file: null
+
+  - host: www.4screen.com
+    note: 301 redirect to the apex host; documents resolve identically.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: 4screen-security.txt
+        note: Served after the 301 to https://4screen.com/.well-known/security.txt.
+
+  - host: api.4screen.com
+    note: >-
+      The production API host, running behind Spring Security. Every path that
+      is not the Keycloak realm or security.txt answers HTTP 401 with the JSON
+      body {"httpStatus":401,"domain":"SYSTEM","errorCode":"AUTHENTICATION_FAILED"}.
+      A 401 here is a wall, not an absence — the document may or may not exist
+      behind it.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain;charset=utf-8
+        file: 4screen-api-security.txt
+        note: >-
+          A second, shorter security.txt scoped to the API host. Same
+          infosec@4screen.com contact; Expires 2026-12-04, i.e. this copy
+          expires sooner than the one on the marketing domain.
+      - path: /auth/realms/fourscreen/.well-known/openid-configuration
+        status: 200
+        content_type: application/json;charset=UTF-8
+        file: 4screen-openid-configuration.json
+        note: >-
+          Keycloak OpenID Provider Metadata (RFC 8414 / OIDC Discovery 1.0),
+          served anonymously. Issuer https://api.4screen.com/auth/realms/fourscreen.
+          Not at the host root — the realm prefix is required.
+      - path: /auth/realms/fourscreen/.well-known/oauth-authorization-server
+        status: 200
+        content_type: application/json;charset=UTF-8
+        file: 4screen-oauth-authorization-server.json
+        note: >-
+          RFC 8414 OAuth 2.0 Authorization Server Metadata. Keycloak serves the
+          identical document at this alias; saved separately because the path is
+          a distinct published surface.
+      - path: /.well-known/openid-configuration
+        status: 401
+        file: null
+        note: Root alias is gated; only the realm-prefixed path is anonymous.
+      - path: /.well-known/oauth-authorization-server
+        status: 401
+        file: null
+      - path: /.well-known/oauth-protected-resource
+        status: 401
+        file: null
+      - path: /.well-known/api-catalog
+        status: 401
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 401
+        file: null
+      - path: /.well-known/agent-card.json
+        status: 401
+        file: null
+      - path: /.well-known/agent.json
+        status: 401
+        file: null
+
+  - host: portal.4screen.com
+    note: >-
+      The 4.screen customer portal, a Vite/React single-page app served from
+      Azure Blob Storage. Its SPA catch-all answers HTTP 200 with the app shell
+      for some unknown paths — those are recorded as misses below, per the
+      soft-200 rule, because an HTML shell is not a document.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: 4screen-portal-security.txt
+        note: >-
+          A third security.txt, scoped to the portal host. Same
+          infosec@4screen.com contact; Expires 2027-09-04.
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: null
+        soft_200: true
+        note: >-
+          NOT A DOCUMENT. Returns the 2,750-byte SPA index.html shell
+          (content-type text/html). Recorded as a miss.
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: null
+        soft_200: true
+        note: NOT A DOCUMENT — same SPA shell. Recorded as a miss.
+      - path: /.well-known/api-catalog
+        status: 200
+        file: null
+        soft_200: true
+        note: NOT A DOCUMENT — same SPA shell. Recorded as a miss.
+      - path: /.well-known/agent-card.json
+        status: 404
+        file: null
+      - path: /.well-known/agent.json
+        status: 404
+        file: null
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        file: null
+
+  - host: status.4screen.com
+    note: >-
+      Instatus-hosted status page (CNAME cname.instatus.com). The page itself
+      redirects to /login, so it is a private status page; well-known paths are
+      served by Instatus, not by 4.screen, and are not recorded as 4.screen
+      documents.
+    documents: []
+
+summary:
+  hosts_probed: 5
+  documents_found: 5
+  security_txt_hosts: 3
+  agent_card_found: false
+  api_catalog_found: false
+  ai_plugin_found: false
+  llms_txt_found: false
+  oauth_metadata_found: true
+  openid_configuration_found: true

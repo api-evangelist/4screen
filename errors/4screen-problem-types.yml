@@ -1,0 +1,68 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Observed directly on the wire from https://api.4screen.com/ and ~25 other
+  paths on that host, 2026-09-05.
+name: 4.screen API error envelope
+description: >-
+  4.screen's error catalog cannot be derived: there is no OpenAPI in this repo
+  to read 4xx/5xx responses from, and no public error reference exists. What IS
+  recorded here is the one error the API returns to an anonymous caller,
+  captured verbatim, because it establishes the envelope shape and shows the
+  error taxonomy is namespaced by `domain` + `errorCode`.
+
+format: proprietary
+rfc9457: false
+content_type: text/plain
+note_content_type: >-
+  The body is JSON but the response is labelled text/plain. A client cannot
+  content-negotiate its way to application/problem+json.
+
+envelope:
+  fields:
+    - name: httpStatus
+      type: integer
+      description: Repeats the HTTP status code in the body.
+    - name: domain
+      type: string
+      description: >-
+        Error namespace. Only the value `SYSTEM` is observable anonymously; the
+        field's existence implies further domains behind authentication.
+    - name: errorCode
+      type: string
+      description: Machine-readable symbolic code, e.g. AUTHENTICATION_FAILED.
+    - name: message
+      type: string
+      description: Human-readable message.
+
+problem_types:
+  - status: 401
+    domain: SYSTEM
+    errorCode: AUTHENTICATION_FAILED
+    title: Full authentication is required to access this resource
+    observed: true
+    observed_at: '2026-09-05'
+    observed_on:
+      - https://api.4screen.com/
+      - https://api.4screen.com/openapi.json
+      - https://api.4screen.com/v3/api-docs
+      - https://api.4screen.com/graphql
+      - https://api.4screen.com/.well-known/openid-configuration
+    body: '{"httpStatus":401,"domain":"SYSTEM","errorCode":"AUTHENTICATION_FAILED","message":"Full authentication is required to access this resource"}'
+    remediation: >-
+      Obtain a bearer token from
+      https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token
+      using a client_credentials or authorization_code grant and present it as
+      Authorization: Bearer <JWT>.
+
+catalog_completeness:
+  observed_types: 1
+  documented_types: 0
+  note: >-
+    ONE of one anonymously observable error is recorded. This is not a complete
+    catalog and is not presented as one — 4.screen publishes no error reference,
+    so every non-401 error is unmeasurable from outside.
+
+gaps:
+  - Publish an error-code reference listing every `domain` and `errorCode`.
+  - Serve the envelope as application/problem+json per RFC 9457.

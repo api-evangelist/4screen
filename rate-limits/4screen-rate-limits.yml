@@ -1,0 +1,55 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live header inspection of https://api.4screen.com/ and ~25 further paths on
+  that host, plus a search of every public 4.screen page in
+  https://4screen.com/sitemap.xml, 2026-09-05.
+name: 4.screen API rate limits
+description: >-
+  4.screen documents no rate limits, and none can be observed. Every anonymous
+  request to api.4screen.com is rejected at the authentication layer with HTTP
+  401 before any quota is consulted, and no rate-limit header of any kind is
+  returned. There is no public API reference in which limits could be published.
+
+limit_count: 0
+documented: false
+limits: []
+
+response_headers:
+  observed: []
+  probed_for:
+    - X-RateLimit-Limit
+    - X-RateLimit-Remaining
+    - X-RateLimit-Reset
+    - RateLimit-Limit
+    - RateLimit-Remaining
+    - RateLimit-Reset
+    - RateLimit-Policy
+    - Retry-After
+  note: >-
+    None of the above appeared on any response from api.4screen.com. The full
+    header set returned with the 401 is: vary, cache-control, pragma, expires,
+    content-length, date, content-type.
+
+exhaustion_status_code: unknown
+
+evidence:
+  - url: https://api.4screen.com/
+    status: 401
+    note: No rate-limit headers present.
+  - url: https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+    status: 200
+    note: >-
+      The one anonymously reachable 200 on the API host. No rate-limit headers
+      present on it either.
+  - url: https://4screen.com/sitemap.xml
+    status: 200
+    note: >-
+      Sitemap walked; no developer, API, limits or quotas page exists to
+      document limits on.
+
+note: >-
+  limit_count is an honest zero: it records that 4.screen publishes no limits,
+  not that the API is unlimited. Because the surface is fully gated, limits
+  almost certainly exist behind authentication and are communicated to partners
+  privately.

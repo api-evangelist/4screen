@@ -1,0 +1,7 @@
+# Security contact for 4screen.com
+# https://www.rfc-editor.org/rfc/rfc9116
+
+Contact: mailto:infosec@4screen.com
+Expires: 2027-08-20T00:00:00.000Z
+Preferred-Languages: en, de
+Canonical: https://4screen.com/.well-known/security.txt

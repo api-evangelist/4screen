@@ -1,0 +1,99 @@
+generated: '2026-09-05'
+method: probed
+source: https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+docs: null
+name: 4.screen OAuth 2.0 scopes
+description: >-
+  The complete scopes_supported list advertised by 4.screen's Keycloak realm.
+  Two of these are first-party business scopes that map directly onto 4.screen's
+  two-sided marketplace — the demand side (advertisers and businesses buying
+  in-car placements) and the supply side (automakers and mobility service
+  providers serving them). The rest are Keycloak/OIDC standard scopes.
+  NOTE: which scope each API operation requires is NOT published — there is no
+  public API reference — so the descriptions of the two first-party scopes below
+  are marked inferred and must not be read as documented behaviour.
+
+issuer: https://api.4screen.com/auth/realms/fourscreen
+authorization_endpoint: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/auth
+token_endpoint: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token
+scope_count: 14
+first_party_scope_count: 3
+
+scopes:
+  - name: demand-client-scope
+    category: first-party
+    documented: false
+    description: >-
+      INFERRED, not documented. 4.screen's own naming for the demand side of its
+      marketplace — the businesses, brands and agencies that buy Branded Pins,
+      Sponsored Search, Recommendations and Detail Screen placements. This is the
+      scope the 4.screen customer portal client would carry.
+  - name: supply-operations-client-scope
+    category: first-party
+    documented: false
+    description: >-
+      INFERRED, not documented. 4.screen's own naming for the supply side — the
+      automaker/OEM and mobility-service-provider integrations that render
+      4.screen content inside an infotainment system, plus the operational
+      tooling around them.
+  - name: service_account
+    category: first-party
+    documented: false
+    description: >-
+      Keycloak service-account scope, used by client_credentials machine clients.
+      Present in the realm's scopes_supported list.
+
+  - name: openid
+    category: oidc-standard
+    documented: true
+    description: Required to request an ID token (OpenID Connect Core 1.0).
+  - name: profile
+    category: oidc-standard
+    documented: true
+    description: name, given_name, family_name, preferred_username claims.
+  - name: email
+    category: oidc-standard
+    documented: true
+    description: email claim.
+  - name: phone
+    category: oidc-standard
+    documented: true
+    description: phone_number claims.
+  - name: address
+    category: oidc-standard
+    documented: true
+    description: address claim.
+  - name: offline_access
+    category: oidc-standard
+    documented: true
+    description: Issues a refresh token usable while the user is offline.
+  - name: acr
+    category: keycloak-default
+    documented: true
+    description: Authentication Context Class Reference claim (acr_values 0 and 1 advertised).
+  - name: basic
+    category: keycloak-default
+    documented: true
+    description: Keycloak default client scope carrying sub and auth_time.
+  - name: roles
+    category: keycloak-default
+    documented: true
+    description: Realm and client role mappings in the token.
+  - name: web-origins
+    category: keycloak-default
+    documented: true
+    description: CORS allowed-origins mapper.
+  - name: microprofile-jwt
+    category: keycloak-default
+    documented: true
+    description: Eclipse MicroProfile JWT claims (upn, groups).
+
+gaps:
+  - >-
+    No scopes/permissions reference page exists on any public 4.screen surface.
+    docs: is null for that reason, not because the search was skipped —
+    docs.4screen.com and developer.4screen.com do not resolve in DNS, and
+    4screen.com has no developer section in its sitemap.
+  - >-
+    Operation-to-scope mapping is unavailable because api.4screen.com returns
+    401 on every springdoc/OpenAPI path and on /graphql.

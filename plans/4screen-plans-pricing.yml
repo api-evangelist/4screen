@@ -1,0 +1,53 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://4screen.com/sitemap.xml (HTTP 200 — no pricing page in the index),
+  https://4screen.com/pricing/ (HTTP 404),
+  https://4screen.com/in-car-marketing-for-businesses/ (HTTP 200),
+  https://4screen.com/4-automotives/ (HTTP 200),
+  https://4screen.com/advertising-conditions-europe/ (HTTP 200).
+name: 4.screen plans and pricing
+description: >-
+  4.screen publishes no pricing whatsoever. There is no pricing page, no rate
+  card, no tier table and no self-serve signup. Both sides of the marketplace are
+  routed to a sales conversation: advertisers to "Book a meeting"
+  (https://4screen.com/book-a-meeting/) and automakers to "Book an OEM
+  Partnership Meeting" (https://4screen.com/book-oem-meeting/). Access to the
+  customer portal at portal.4screen.com requires credentials issued by 4.screen.
+
+plan_count: 0
+pricing_model: contact-sales
+self_serve: false
+free_tier: false
+trial: false
+currency: null
+plans: []
+
+evidence:
+  - url: https://4screen.com/pricing/
+    status: 404
+    note: No pricing page exists; the WordPress 404 template is returned.
+  - url: https://4screen.com/sitemap.xml
+    status: 200
+    note: >-
+      The full page sitemap (page-sitemap.xml) was walked. It lists 190 pages
+      across five languages and contains no pricing, plans, rate-card or
+      packages page.
+  - url: https://4screen.com/book-a-meeting/
+    status: 200
+    note: The demand-side (advertiser) sales gate that stands in for pricing.
+  - url: https://4screen.com/book-oem-meeting/
+    status: 200
+    note: The supply-side (automaker) sales gate.
+  - url: https://4screen.com/advertising-conditions-europe/
+    status: 200
+    note: >-
+      Advertising terms and conditions for the European market. Commercial
+      terms, not prices — no rates are stated.
+
+commercial_note: >-
+  The billing stack is real even though the prices are not published: the
+  customer portal's public config.js exposes two live Stripe publishable keys,
+  one for an `emea` region and one for `na`, which shows self-serve card
+  billing is wired for portal customers in both regions. That is a fact about
+  the plumbing, not evidence of a published plan.

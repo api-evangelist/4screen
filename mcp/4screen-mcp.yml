@@ -1,0 +1,52 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live probes 2026-09-05 of https://api.4screen.com/mcp, https://api.4screen.com/sse,
+  https://mcp.4screen.com/mcp, plus DNS lookups for mcp/agent/ai.4screen.com and a
+  walk of https://4screen.com/sitemap.xml.
+name: 4.screen MCP server
+description: >-
+  4.screen ships no Model Context Protocol server, and none can be derived. This
+  artifact records the search so a later pass does not repeat it, and so the
+  absence is countable rather than merely unrecorded.
+
+status: none
+tools: []
+tool_count: 0
+
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+
+evidence:
+  - url: https://api.4screen.com/mcp
+    method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    status: 401
+    note: >-
+      The host's blanket Spring Security 401, identical to every other path —
+      not an MCP OAuth challenge (no WWW-Authenticate resource_metadata header).
+      There is no evidence an MCP handler is mounted here at all.
+  - url: https://api.4screen.com/sse
+    status: 401
+  - url: https://mcp.4screen.com/mcp
+    status: 0
+    note: mcp.4screen.com does not resolve in DNS.
+  - host: agent.4screen.com
+    status: 0
+    note: Does not resolve.
+  - host: ai.4screen.com
+    status: 0
+    note: Does not resolve.
+  - url: https://4screen.com/sitemap.xml
+    status: 200
+    note: 190 pages walked; no MCP, agent or AI-integration page.
+
+derivation_note: >-
+  A candidate tool list could not be derived either: deriving one requires an
+  OpenAPI to enumerate operations from, and 4.screen publishes none (see
+  conformance/4screen-conformance.yml, id openapi). No tool names are invented
+  here. No `MCPServer` pointer is emitted into apis.yml, because mode is none.

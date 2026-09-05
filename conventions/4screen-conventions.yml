@@ -1,0 +1,132 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live probes of https://api.4screen.com (HTTP 401 on every path),
+  https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+  (HTTP 200) and https://portal.4screen.com/config.js (HTTP 200).
+name: 4.screen API conventions
+description: >-
+  Cross-cutting runtime semantics for the 4.screen API. This artifact is
+  deliberately mostly `unknown`: 4.screen publishes no API reference and no
+  specification, so almost nothing about its request/response conventions can be
+  observed without credentials. Every field below is either something actually
+  seen on the wire, or an explicit unknown with the reason. Nothing here is
+  inferred from what a platform of this kind "usually" does.
+
+auth_style:
+  known: true
+  model: 'OAuth 2.0 / OIDC bearer JWT (Keycloak realm `fourscreen`)'
+  header: 'Authorization: Bearer <JWT>'
+  machine_flow: client_credentials
+  interactive_flow: authorization_code + PKCE (S256)
+  mtls_available: true
+  detail: See authentication/4screen-authentication.yml.
+
+error_envelope:
+  known: true
+  observed_shape:
+    httpStatus: integer
+    domain: string
+    errorCode: string
+    message: string
+  example_observed: '{"httpStatus":401,"domain":"SYSTEM","errorCode":"AUTHENTICATION_FAILED","message":"Full authentication is required to access this resource"}'
+  content_type_observed: text/plain
+  rfc9457: false
+  note: >-
+    This is the only response body obtainable without credentials, and it is
+    consistent across every path on api.4screen.com. The `domain` field
+    (observed value SYSTEM) implies a namespaced error taxonomy behind the gate,
+    but only the SYSTEM/AUTHENTICATION_FAILED member of it is observable. The
+    envelope is served as text/plain even though the body is JSON, and it is not
+    application/problem+json. See errors/4screen-problem-types.yml.
+
+idempotency:
+  coverage: none
+  scope: []
+  mechanism: null
+  header: null
+  retention: null
+  documented: false
+  evidence: >-
+    No Idempotency-Key or equivalent header is documented anywhere on a public
+    4.screen surface, and no OpenAPI exists in this repo from which a header
+    parameter could be derived. The 401 responses from api.4screen.com carry no
+    idempotency-related headers. Recorded as `none` because nothing establishes
+    replay protection — NOT as `unknown`, since the machine verdict field must
+    carry a decidable value and no evidence of a mechanism exists.
+  note: >-
+    If 4.screen does implement idempotency behind the gate, this is a
+    documentation gap they can close by publishing the header contract; it would
+    move directly from `none` to `full` or `partial` on the next pass.
+
+reversibility:
+  grade: unknown
+  write_surface_known: false
+  reversal_operations: []
+  evidence: >-
+    4.screen's write surface is not observable. The portal manages advertising
+    campaigns, which strongly implies create/pause/stop/cancel semantics, but no
+    reversal operation, operationId or reversal WINDOW is published anywhere
+    public — and per the pipeline's own rule an invented window is the single
+    most costly error available here, so none is asserted.
+  note: >-
+    Recorded as `unknown` rather than `na`: this is NOT a read-only API (the
+    customer portal at portal.4screen.com is a campaign-management application
+    calling this host), so the dimension genuinely applies — it simply cannot be
+    measured from outside. `na` would be a false claim that there is nothing to
+    reverse.
+
+dry_run_mode:
+  supported: unknown
+  evidence: No public reference documents a dry-run, preview, validate or simulate mode.
+
+pagination:
+  style: unknown
+  params: []
+  response_fields: []
+  evidence: No public reference; no spec; no anonymously reachable collection endpoint.
+
+rate_limit_signaling:
+  headers_observed: []
+  evidence: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header was present on any
+    response from api.4screen.com. Only 401s are reachable, so this is
+    unmeasured rather than confirmed absent. See rate-limits/4screen-rate-limits.yml.
+
+versioning:
+  style: unknown
+  evidence: See lifecycle/4screen-lifecycle.yml.
+
+request_id_tracing:
+  header: unknown
+  evidence: >-
+    The 401 responses from api.4screen.com expose no correlation or request-id
+    header. The response does carry CORS Vary
+    (Origin,Access-Control-Request-Method,Access-Control-Request-Headers) and
+    strict no-store cache-control, which are the only conventions confirmable
+    anonymously.
+
+field_expansion:
+  supported: unknown
+metadata:
+  supported: unknown
+
+observed_response_headers:
+  surface: https://api.4screen.com/
+  headers:
+    cache-control: 'no-cache, no-store, max-age=0, must-revalidate'
+    pragma: no-cache
+    expires: '0'
+    vary: 'Origin,Access-Control-Request-Method,Access-Control-Request-Headers, Accept-Encoding'
+  note: >-
+    Spring Security defaults. api.4screen.com does NOT send
+    Strict-Transport-Security (the marketing host does, max-age 31536000) — see
+    security/4screen-domain-security.yml.
+
+cross_links:
+  authentication: authentication/4screen-authentication.yml
+  scopes: scopes/4screen-scopes.yml
+  errors: errors/4screen-problem-types.yml
+  lifecycle: lifecycle/4screen-lifecycle.yml
+  rate_limits: rate-limits/4screen-rate-limits.yml
+  conformance: conformance/4screen-conformance.yml

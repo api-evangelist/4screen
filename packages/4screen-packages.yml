@@ -1,0 +1,95 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Registry searches on 2026-09-05: registry.npmjs.org (text search "4screen"),
+  pypi.org/pypi/4screen/json, rubygems.org/api/v1/gems/4screen.json,
+  crates.io/api/v1/crates/4screen, search.maven.org, api.nuget.org,
+  plus the GitHub organization https://github.com/4screen.
+name: 4.screen client packages
+description: >-
+  4.screen publishes no client libraries. No first-party SDK exists on any
+  public package registry, and the company's GitHub organization contains no
+  first-party code. Integration is direct HTTP against api.4screen.com with an
+  OAuth 2.0 bearer token.
+
+package_count: 0
+official_package_count: 0
+packages: []
+
+search_results:
+  - registry: npm
+    query: '4screen'
+    endpoint: https://registry.npmjs.org/-/v1/search?text=4screen
+    status: 200
+    matches: 0
+    version: null
+    published: null
+    note: Zero results. Checked, nothing to record.
+  - registry: pypi
+    query: '4screen'
+    endpoint: https://pypi.org/pypi/4screen/json
+    status: 404
+    version: null
+    published: null
+  - registry: rubygems
+    query: '4screen'
+    endpoint: https://rubygems.org/api/v1/gems/4screen.json
+    status: 404
+    version: null
+    published: null
+  - registry: crates.io
+    query: '4screen'
+    endpoint: https://crates.io/api/v1/crates/4screen
+    status: 404
+    version: null
+    published: null
+  - registry: maven-central
+    query: '4screen'
+    endpoint: https://search.maven.org/solrsearch/select?q=4screen
+    status: 200
+    matches: 0
+    version: null
+    published: null
+  - registry: nuget
+    query: '4screen'
+    endpoint: https://azuresearch-usnc.nuget.org/query?q=4screen
+    status: 200
+    matches: 0
+    version: null
+    published: null
+    note: >-
+      56 hits returned, none authored by or related to 4.screen GmbH (fuzzy
+      matches on "screen"). No first-party package.
+
+github_organization:
+  url: https://github.com/4screen
+  status: 200
+  verified_first_party: true
+  verified_how: >-
+    GitHub org login `4screen`, display name "4.screen", blog
+    https://www.4screen.com, created 2020-09-03. Confirmed via the GitHub API.
+  public_repos: 1
+  first_party_repos: 0
+  repos:
+    - name: dbt-data-reliability
+      url: https://github.com/4screen/dbt-data-reliability
+      fork: true
+      upstream: elementary-data/dbt-data-reliability
+      language: Python
+      pushed_at: '2026-07-31'
+      first_party: false
+      note: >-
+        A fork of Elementary's dbt data-observability package, used internally
+        for 4.screen's own data pipeline. Not an API client and not a 4.screen
+        product — it is NOT counted as an SDK.
+
+name_collision_warning: >-
+  Do not attribute the GitHub organization `4screens` (plural) or the npm/GitHub
+  projects named "4screens" to this company. Those belong to a different,
+  unrelated second-screen company. Only github.com/4screen (singular) is 4.screen
+  GmbH, confirmed by its blog field pointing at www.4screen.com.
+
+note: >-
+  No `SDKs` pointer is emitted into apis.yml, and no `Packages` pointer either:
+  there is nothing to point at. package_count: 0 is checked-and-empty, not
+  not-checked.

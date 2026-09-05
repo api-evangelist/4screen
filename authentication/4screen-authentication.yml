@@ -1,0 +1,160 @@
+generated: '2026-09-05'
+method: probed
+source: https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+docs: null
+name: 4.screen API authentication
+description: >-
+  Every 4.screen API surface is protected. The whole of api.4screen.com answers
+  HTTP 401 with a {"httpStatus":401,"domain":"SYSTEM","errorCode":"AUTHENTICATION_FAILED"}
+  envelope for anonymous callers. Authentication is OpenID Connect / OAuth 2.0
+  against a self-hosted Keycloak realm mounted under /auth on the same host, and
+  that realm's discovery document IS served anonymously — so the auth contract
+  is public even though the API contract is not.
+
+x-evidence:
+  fetched: '2026-09-05'
+  discovery_url: https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+  discovery_status: 200
+  discovery_content_type: application/json;charset=UTF-8
+  saved_verbatim: well-known/4screen-openid-configuration.json
+  anonymous_api_probe:
+    url: https://api.4screen.com/
+    status: 401
+    body: '{"httpStatus":401,"domain":"SYSTEM","errorCode":"AUTHENTICATION_FAILED","message":"Full authentication is required to access this resource"}'
+  discovered_via: >-
+    https://portal.4screen.com/config.js (HTTP 200) publishes
+    window.AUTH_URL = 'https://api.4screen.com/auth' and
+    window.AUTH_REALM = 'fourscreen', which is what located the realm path.
+
+provider:
+  identity_provider: Keycloak
+  self_hosted: true
+  issuer: https://api.4screen.com/auth/realms/fourscreen
+  realm: fourscreen
+  note: >-
+    Keycloak is 4.screen's own deployment on their own API host, not a
+    third-party IDaaS tenant. The public_key and realm metadata are readable at
+    https://api.4screen.com/auth/realms/fourscreen (HTTP 200).
+
+schemes:
+  - id: openIdConnect
+    type: openIdConnect
+    openIdConnectUrl: https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+    description: >-
+      Full OIDC discovery is published. Clients obtain a bearer JWT from the
+      Keycloak token endpoint and present it to api.4screen.com.
+    in: header
+    header: Authorization
+    format: 'Bearer <JWT>'
+  - id: oauth2
+    type: oauth2
+    description: >-
+      OAuth 2.0 flows advertised by the realm. client_credentials is the
+      server-to-server mode a partner integration would use; authorization_code
+      with PKCE (S256 advertised) is what the browser portal uses.
+    flows:
+      clientCredentials:
+        tokenUrl: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token
+      authorizationCode:
+        authorizationUrl: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/auth
+        tokenUrl: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token
+        refreshUrl: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token
+      deviceCode:
+        deviceAuthorizationUrl: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/auth/device
+
+endpoints:
+  issuer: https://api.4screen.com/auth/realms/fourscreen
+  authorization: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/auth
+  token: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token
+  introspection: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/token/introspect
+  userinfo: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/userinfo
+  jwks_uri: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/certs
+  revocation: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/revoke
+  end_session: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/logout
+  device_authorization: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/auth/device
+  backchannel_authentication: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/ext/ciba/auth
+  pushed_authorization_request: https://api.4screen.com/auth/realms/fourscreen/protocol/openid-connect/ext/par/request
+  dynamic_client_registration: https://api.4screen.com/auth/realms/fourscreen/clients-registrations/openid-connect
+
+grant_types_supported:
+  - authorization_code
+  - client_credentials
+  - implicit
+  - password
+  - refresh_token
+  - 'urn:ietf:params:oauth:grant-type:device_code'
+  - 'urn:ietf:params:oauth:grant-type:token-exchange'
+  - 'urn:ietf:params:oauth:grant-type:uma-ticket'
+  - 'urn:openid:params:grant-type:ciba'
+
+token_endpoint_auth_methods_supported:
+  - private_key_jwt
+  - client_secret_basic
+  - client_secret_post
+  - tls_client_auth
+  - client_secret_jwt
+
+capabilities:
+  pkce: true
+  pkce_methods: [plain, S256]
+  mtls_client_auth: true
+  mtls_bound_access_tokens: true
+  pushed_authorization_requests: true
+  par_required: false
+  dpop: false
+  dynamic_client_registration: true
+  backchannel_logout: true
+  frontchannel_logout: true
+  request_object_support: true
+  request_uri_registration_required: true
+  claims_parameter_supported: true
+
+id_token_signing_algs:
+  - RS256
+  - RS384
+  - RS512
+  - PS256
+  - PS384
+  - PS512
+  - ES256
+  - ES384
+  - ES512
+  - EdDSA
+  - HS256
+  - HS384
+  - HS512
+
+claims_supported: [aud, sub, iss, auth_time, name, given_name, family_name, preferred_username, email, acr]
+
+known_clients:
+  - client_id: portal
+    surface: https://portal.4screen.com
+    note: >-
+      Public browser client for the 4.screen customer portal, named in the
+      portal's own config.js. Its presence confirms authorization_code is the
+      interactive flow; the partner/OEM integration path is client_credentials.
+
+observations:
+  - >-
+    Notable weakness in the published posture: the realm still advertises the
+    `implicit` and `password` (Resource Owner Password Credentials) grant types,
+    both of which OAuth 2.0 Security BCP (RFC 9700) says MUST NOT be used. This
+    is Keycloak's default surface rather than a deliberate 4.screen choice, but
+    it is what the discovery document tells a client.
+  - >-
+    Notable strength: mutual-TLS client authentication and certificate-bound
+    access tokens (RFC 8705) are both advertised, as are Pushed Authorization
+    Requests (RFC 9126) and private_key_jwt — an unusually complete set for a
+    company of this size, and the pieces a FAPI-grade integration needs.
+  - >-
+    require_pushed_authorization_requests is false, so PAR is available but not
+    enforced.
+
+gaps:
+  - >-
+    No published API reference, so which scope or role each endpoint requires is
+    not documented anywhere public. The scope NAMES are known (see
+    scopes/4screen-scopes.yml) but their operation mapping is not.
+  - >-
+    No documented API-key alternative for server-to-server callers; every
+    integration goes through the OAuth token endpoint.

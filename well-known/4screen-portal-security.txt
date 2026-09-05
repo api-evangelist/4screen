@@ -1,0 +1,3 @@
+Contact: mailto:infosec@4screen.com
+Expires: 2027-09-04T12:01:15.042Z
+Preferred-Languages: en, de

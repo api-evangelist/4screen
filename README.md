@@ -64,5 +64,43 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-4.screen is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://equityzen.com/company/4screen
+4.screen GmbH (Munich, Germany) operates the Driver Interaction Platform — a two-sided in-car
+marketplace connecting businesses with drivers in real time through the vehicle's built-in
+navigation and infotainment screen. Its Mobility Experience Cloud (MXC) connects by API to
+automaker vehicle backends, and brands buy four placement formats through it: Branded Pins,
+Sponsored Search, Recommendations and Detail Screen.
+
+## What this profile found
+
+4.screen has a **real, production API** at `https://api.4screen.com`, and it is **entirely
+auth-gated**. Every anonymous request — including `/openapi.json`, `/v3/api-docs`,
+`/swagger.json` and `/graphql` — returns HTTP 401 `AUTHENTICATION_FAILED`. `docs.4screen.com`
+and `developer.4screen.com` do not resolve in DNS, and both the OEM page and the advertiser
+page substitute a "Book a meeting" form for a technical reference. No OpenAPI, GraphQL SDL,
+Postman collection, SDK, MCP server or A2A agent card is published anywhere.
+
+What 4.screen **does** publish, anonymously and to standard, is its authentication contract:
+a self-hosted Keycloak realm (`fourscreen`) serving full OpenID Connect discovery and RFC 8414
+OAuth 2.0 Authorization Server Metadata, advertising PKCE, mutual-TLS certificate-bound tokens
+(RFC 8705), Pushed Authorization Requests (RFC 9126), the device grant and CIBA — plus two
+first-party business scopes, `demand-client-scope` and `supply-operations-client-scope`, that
+mirror the two sides of its marketplace. It also serves an RFC 9116 `security.txt` from three
+separate hosts.
+
+## Artifacts
+
+| Artifact | Method |
+|---|---|
+| `well-known/` — 3 × security.txt, OIDC discovery, OAuth AS metadata (all verbatim) + index | probed |
+| `authentication/` — full OAuth 2.0 / OIDC profile | probed |
+| `scopes/` — 14 realm scopes, 3 first-party | probed |
+| `conformance/` — 12 standards conformed, 4 not, 2 unknown | probed |
+| `errors/` — the one anonymously observable error envelope | probed |
+| `conventions/` — runtime semantics (mostly honest unknowns) | probed |
+| `lifecycle/` — versioning, deprecation, private status page | probed |
+| `security/` — domain security posture, vulnerability disclosure | probed |
+| `plans/`, `rate-limits/`, `packages/`, `mcp/` — honest zeros with evidence | searched |
+| `llms/` — generated from the above | generated |
+
+- https://4screen.com/
+- https://github.com/4screen

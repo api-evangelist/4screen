@@ -1,0 +1,22 @@
+generated: '2026-09-05'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: 4screen.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov  3 10:11:24 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+- host: api.4screen.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Nov 28 17:56:06 2026 GMT
+  hsts: null
+domains:
+- domain: 4screen.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

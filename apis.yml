@@ -1,23 +1,146 @@
 aid: 4screen
 name: 4.screen
-description: '4.screen is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  4.screen GmbH (Munich, Germany) operates the Driver Interaction Platform — a
+  two-sided in-car marketplace connecting businesses with drivers in real time
+  through the vehicle's built-in navigation and infotainment screen. Its
+  Mobility Experience Cloud (MXC) connects by API to automaker vehicle backends,
+  and brands buy four placement formats through it: Branded Pins (a logo on the
+  in-car map at a business location), Sponsored Search (paid ranking in in-car
+  navigation results), Recommendations (context-aware offers driven by vehicle
+  signals) and Detail Screen (an interactive promotion with engagement
+  tracking). OEM partners include Audi, Volkswagen, Skoda, Nissan, Hyundai, Kia
+  and the Stellantis brands; advertisers include McDonald's, Shell, KFC,
+  Waitrose, Kaufland and Coop. The API is real and central to the product, but
+  entirely gated: api.4screen.com answers HTTP 401 on every path, and there is
+  no public developer portal, reference or specification.
+image: https://4screen.com/wp-content/uploads/2024/06/4screen_logo.svg
 url: https://raw.githubusercontent.com/api-evangelist/4screen/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-05'
 modified: '2026-09-05'
 tags:
 - Company
-apis: []
+- Advertising
+- AdTech
+- Automotive
+- Mobility
+- Connected Vehicle
+- In-Car Commerce
+- Location
+- Navigation
+- Marketing
+- Germany
+apis:
+- aid: 4screen:mobility-experience-cloud
+  name: 4.screen Mobility Experience Cloud API
+  description: >-
+    The production 4.screen API. Automakers and mobility service providers
+    integrate it into infotainment and navigation systems to render 4.screen
+    content in the vehicle, and the 4.screen customer portal calls the same host
+    for campaign management. The surface is OAuth 2.0 / OpenID Connect protected
+    by a self-hosted Keycloak realm mounted at /auth on the same host, and a
+    GraphQL endpoint is referenced by the portal application at /graphql. No
+    OpenAPI, GraphQL SDL or public reference is published — every anonymous
+    request to api.4screen.com returns HTTP 401 AUTHENTICATION_FAILED.
+  humanURL: https://4screen.com/4-automotives/
+  image: https://4screen.com/wp-content/uploads/2024/06/4screen_logo.svg
+  baseURL: https://api.4screen.com
+  tags:
+  - Advertising
+  - Automotive
+  - Mobility
+  - Navigation
+  - In-Car Commerce
+  properties:
+  - type: Authentication
+    url: authentication/4screen-authentication.yml
+  - type: OAuthScopes
+    url: scopes/4screen-scopes.yml
+  - type: OpenIDConnect
+    url: well-known/4screen-openid-configuration.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: VulnerabilityDisclosure
+  url: security/4screen-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/4screen-domain-security.yml
 - type: Website
-  url: https://equityzen.com/company/4screen
+  url: https://4screen.com/
+- type: Documentation
+  url: https://4screen.com/faqs/
+- type: Support
+  url: https://4screen.com/contact-us/
+- type: Blog
+  url: https://4screen.com/news/
+- type: GitHubOrganization
+  url: https://github.com/4screen
+- type: SignUp
+  url: https://portal.4screen.com/
+- type: PrivacyPolicy
+  url: https://4screen.com/privacy-policy/
+- type: TermsOfService
+  url: https://4screen.com/advertising-conditions-europe/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/4screen/
+- type: CaseStudies
+  url: https://4screen.com/case-studies/
+- type: Authentication
+  url: authentication/4screen-authentication.yml
+- type: OAuthScopes
+  url: scopes/4screen-scopes.yml
+- type: WellKnown
+  url: well-known/4screen-well-known.yml
+- type: SecurityTxt
+  url: well-known/4screen-security.txt
+- type: Conformance
+  url: conformance/4screen-conformance.yml
+- type: Lifecycle
+  url: lifecycle/4screen-lifecycle.yml
+- type: Conventions
+  url: conventions/4screen-conventions.yml
+- type: LLMsTxt
+  url: llms/4screen-llms.txt
+- type: Plans
+  url: plans/4screen-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/4screen-rate-limits.yml
+- type: Security
+  url: security/4screen-vulnerability-disclosure.yml
+- type: ErrorCatalog
+  url: errors/4screen-problem-types.yml
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v3
+x-coverage:
+  state: gated
+  reason: sales-gate
+  detail: >-
+    4.screen's API is real and central to the product — its own FAQ says
+    automakers "can implement the 4screen API into their infotainment systems
+    ... easily within days" — but api.4screen.com answers HTTP 401
+    AUTHENTICATION_FAILED on every path including /openapi.json, /v3/api-docs
+    and /graphql, docs.4screen.com and developer.4screen.com do not resolve in
+    DNS, and both the OEM page and the advertiser page replace a reference with
+    a "Book an OEM Partnership Meeting" form. The only machine-readable contract
+    4.screen publishes anonymously is its Keycloak OIDC/OAuth discovery document.
+  evidence:
+    - url: https://api.4screen.com/v3/api-docs
+      status: 401
+    - url: https://api.4screen.com/openapi.json
+      status: 401
+    - url: https://api.4screen.com/graphql
+      status: 401
+    - url: https://4screen.com/4-automotives/
+      status: 200
+    - url: https://api.4screen.com/auth/realms/fourscreen/.well-known/openid-configuration
+      status: 200
+  checked: '2026-09-05'

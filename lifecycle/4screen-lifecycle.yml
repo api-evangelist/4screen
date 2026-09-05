@@ -1,0 +1,94 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  https://status.4screen.com/ (HTTP 200, redirects to /login),
+  https://4screen.com/sitemap.xml (HTTP 200),
+  https://api.4screen.com/ (HTTP 401),
+  https://portal.4screen.com/ (HTTP 200).
+name: 4.screen API lifecycle
+description: >-
+  What 4.screen publishes about versioning, deprecation, availability and
+  change. The short answer is: almost nothing publicly, but a status page and a
+  versioned portal build both exist behind the gate.
+
+versioning:
+  scheme: unknown
+  documented: false
+  evidence: >-
+    No versioning policy page exists. The API base https://api.4screen.com
+    exposes no version segment anonymously, and no path prefix could be
+    confirmed because every path returns HTTP 401. The Keycloak realm is mounted
+    at an unversioned /auth prefix.
+  client_version_observed:
+    surface: https://portal.4screen.com/
+    value: 1.147.1
+    evidence: >-
+      <meta name="version" content="1.147.1"> in the portal SPA index.html,
+      HTTP 200, Last-Modified 2026-09-04. This is the PORTAL BUILD number, not
+      an API version — recorded because it is the only version string 4.screen
+      publishes anywhere, and it shows an actively maintained product (the build
+      was one day old when probed).
+
+deprecation:
+  policy_published: false
+  sunset_header: unknown
+  deprecation_header: unknown
+  rfc8594: unknown
+  evidence: >-
+    No deprecation or sunset policy is published on any 4.screen surface. RFC
+    8594 Sunset/Deprecation header behaviour cannot be observed because no
+    endpoint answers anonymously — the 401 responses carry no Sunset or
+    Deprecation header.
+  deprecated_operations: []
+  deprecated_operations_note: >-
+    Cannot be derived: no OpenAPI exists in this repo to read x-deprecated or
+    deprecated: true from.
+
+status_page:
+  exists: true
+  url: https://status.4screen.com/
+  provider: Instatus
+  evidence: >-
+    status.4screen.com resolves via CNAME cname.instatus.com and returns HTTP
+    200 — but the final URL is https://status.4screen.com/login and the page
+    title is "Login to your status page - Instatus". Probed 2026-09-05.
+  public: false
+  note: >-
+    4.screen operates a real status page but has configured it as PRIVATE. A
+    prospective integrator cannot see uptime, incidents or maintenance windows
+    without credentials. For that reason NO `StatusPage` pointer is emitted into
+    apis.yml: the pointer asserts a surface the public can read, and this one
+    they cannot. If 4.screen makes the page public this becomes a straightforward
+    upgrade.
+  rss: null
+  history_api: null
+
+sla:
+  published: false
+  evidence: >-
+    No SLA, uptime commitment or support-tier document is published. The
+    commercial terms that ARE public — https://4screen.com/advertising-conditions-europe/
+    and /advertising-conditions-us/ (both HTTP 200) — are advertising terms and
+    conditions covering campaign delivery, not API availability.
+
+changelog:
+  published: false
+  evidence: >-
+    No dated API changelog or release-notes page exists. https://4screen.com/news/
+    (HTTP 200) is a corporate press/news feed — partnership and product
+    announcements — not a technical change log, so it is wired as `Blog` rather
+    than `ChangeLog`.
+
+maturity:
+  stage: production
+  evidence: >-
+    The company is operating commercially across Europe and North America with
+    named OEM and advertiser partners, the portal build is one day old, and the
+    Keycloak realm signing certificate was issued 2021-10-25 — an auth surface
+    that has been in production for roughly five years.
+
+gaps:
+  - Publish a versioning policy and put a version in the API path or an Accept header.
+  - Publish a deprecation policy and emit RFC 8594 Sunset/Deprecation headers.
+  - Make status.4screen.com public, or publish a public mirror.
+  - Publish a dated API changelog separate from the corporate news feed.
