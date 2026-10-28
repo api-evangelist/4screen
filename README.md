@@ -64,43 +64,110 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-4.screen GmbH (Munich, Germany) operates the Driver Interaction Platform — a two-sided in-car
-marketplace connecting businesses with drivers in real time through the vehicle's built-in
-navigation and infotainment screen. Its Mobility Experience Cloud (MXC) connects by API to
-automaker vehicle backends, and brands buy four placement formats through it: Branded Pins,
-Sponsored Search, Recommendations and Detail Screen.
+4.screen GmbH (Munich, Germany) operates the Driver Interaction Platform — a two-sided in-car marketplace connecting businesses with drivers in real time through the vehicle's built-in navigation and infotainment screen. Its Mobility Experience Cloud (MXC) connects by API to automaker vehicle backends, and brands buy four placement formats through it: Branded Pins (a logo on the in-car map at a business location), Sponsored Search (paid ranking in in-car navigation results), Recommendations (context-aware offers driven by vehicle signals) and Detail Screen (an interactive promotion with engagement tracking). OEM partners include Audi, Volkswagen, Skoda, Nissan, Hyundai, Kia and the Stellantis brands; advertisers include McDonald's, Shell, KFC, Waitrose, Kaufland and Coop. The API is real and central to the product, but entirely gated: api.4screen.com answers HTTP 401 on every path, and there is no public developer portal, reference or specification.
 
-## What this profile found
+**Areas:** Company · Advertising · AdTech · Automotive · Mobility · Connected Vehicles · In-Car Commerce · Location · Navigation · Marketing · Germany
 
-4.screen has a **real, production API** at `https://api.4screen.com`, and it is **entirely
-auth-gated**. Every anonymous request — including `/openapi.json`, `/v3/api-docs`,
-`/swagger.json` and `/graphql` — returns HTTP 401 `AUTHENTICATION_FAILED`. `docs.4screen.com`
-and `developer.4screen.com` do not resolve in DNS, and both the OEM page and the advertiser
-page substitute a "Book a meeting" form for a technical reference. No OpenAPI, GraphQL SDL,
-Postman collection, SDK, MCP server or A2A agent card is published anywhere.
+## 4.screen on APIs.io
 
-What 4.screen **does** publish, anonymously and to standard, is its authentication contract:
-a self-hosted Keycloak realm (`fourscreen`) serving full OpenID Connect discovery and RFC 8414
-OAuth 2.0 Authorization Server Metadata, advertising PKCE, mutual-TLS certificate-bound tokens
-(RFC 8705), Pushed Authorization Requests (RFC 9126), the device grant and CIBA — plus two
-first-party business scopes, `demand-client-scope` and `supply-operations-client-scope`, that
-mirror the two sides of its marketplace. It also serves an RFC 9116 `security.txt` from three
-separate hosts.
+Everything profiled for 4.screen is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/4screen/](https://apis.io/providers/4screen/)** — or go straight to one of the APIs or properties below.
 
-## Artifacts
+### APIs (1)
 
-| Artifact | Method |
+- [4.screen Mobility Experience Cloud API](https://apis.io/apis/4screen/mobility-experience-cloud/) — The production 4.screen API. Automakers and mobility service providers integrate it into infotainment and navigation systems to render 4.screen content in…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [4Screen Authentication](https://apis.io/security/4screen/4screen-authentication/)
+- [4Screen Domain Security](https://apis.io/security/4screen/4screen-domain-security/)
+- [4Screen Vulnerability Disclosure](https://apis.io/security/4screen/4screen-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [4Screen Scopes](https://apis.io/scopes/4screen/4screen-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [4Screen Plans Pricing](https://apis.io/plans/4screen/4screen-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [4Screen Rate Limits](https://apis.io/rate-limits/4screen/4screen-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://4screen.com/)
+- [Documentation](https://4screen.com/faqs/)
+- [Sign up](https://portal.4screen.com/)
+- [Support](https://4screen.com/contact-us/)
+- [Blog](https://4screen.com/news/)
+- [Terms of service](https://4screen.com/advertising-conditions-europe/)
+- [Privacy policy](https://4screen.com/privacy-policy/)
+- [GitHub](https://github.com/4screen)
+
+## API Evangelist rating
+
+**Kin Score 24.2** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| `well-known/` — 3 × security.txt, OIDC discovery, OAuth AS metadata (all verbatim) + index | probed |
-| `authentication/` — full OAuth 2.0 / OIDC profile | probed |
-| `scopes/` — 14 realm scopes, 3 first-party | probed |
-| `conformance/` — 12 standards conformed, 4 not, 2 unknown | probed |
-| `errors/` — the one anonymously observable error envelope | probed |
-| `conventions/` — runtime semantics (mostly honest unknowns) | probed |
-| `lifecycle/` — versioning, deprecation, private status page | probed |
-| `security/` — domain security posture, vulnerability disclosure | probed |
-| `plans/`, `rate-limits/`, `packages/`, `mcp/` — honest zeros with evidence | searched |
-| `llms/` — generated from the above | generated |
+| Discoverability | 66.1 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 13.2 |
+| Developer ergonomics | 28.6 |
+| Access clarity | 21.1 |
 
-- https://4screen.com/
-- https://github.com/4screen
+**Agent readiness 20.5** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+
+**Regulatory alignment 40.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/4screen/](https://apis.io/providers/4screen/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for 4.screen: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/4screen/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
